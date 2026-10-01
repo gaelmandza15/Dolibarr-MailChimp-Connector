@@ -15,7 +15,9 @@
 
 // Load Dolibarr environment
 $res = 0;
-include_once DOL_DOCUMENT_ROOT.'/core/main.inc.php';
+if (!$res && file_exists(__DIR__.'/../../main.inc.php')) { $res = include __DIR__.'/../../main.inc.php'; }
+if (!$res && file_exists(__DIR__.'/..//../main.inc.php')) { $res = include __DIR__.'/..//../main.inc.php'; }
+if (!$res) { die('Include of main fails'); }
 
 global $db, $langs, $user, $conf;
 
@@ -32,7 +34,7 @@ llxHeader('', $langs->trans("MailchimpHome"), '', '', 0, 0, '', '', '', 'mod-mai
 print load_fiche_titre($langs->trans("MailchimpHome"), '', 'email');
 
 if (!getDolGlobalString('MAILCHIMP_APIKEY_ENC') && !mailchimp_get_config($db)['apikey']) {
-	print dol_get_alert($langs->trans("MailchimpNoApiKey"), 'warning');
+	setEventMessages($langs->trans("MailchimpNoApiKey"), null, 'warnings'); dol_htmloutput_events();
 }
 
 print '<div class="fichecenter">';

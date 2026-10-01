@@ -15,7 +15,9 @@
 
 // Load Dolibarr environment
 $res = 0;
-include_once DOL_DOCUMENT_ROOT.'/core/main.inc.php';
+if (!$res && file_exists(__DIR__.'/../../main.inc.php')) { $res = include __DIR__.'/../../main.inc.php'; }
+if (!$res && file_exists(__DIR__.'/..//../main.inc.php')) { $res = include __DIR__.'/..//../main.inc.php'; }
+if (!$res) { die('Include of main fails'); }
 
 global $db, $langs, $user, $conf, $hookmanager;
 
@@ -40,7 +42,7 @@ llxHeader('', $langs->trans("MailchimpTab"), '', '', 0, 0, '', '', '', 'mod-mail
 $head = societe_prepare_head($societe);
 print dol_get_fiche_head($head, 'mailchimp', $langs->trans("ThirdParty"), -1, 'company');
 
-print dol_get_alert($langs->trans("MailchimpSoonPhase2"), 'info');
+setEventMessages($langs->trans("MailchimpSoonPhase2"), null, 'mesgs'); dol_htmloutput_events();
 
 print dol_get_fiche_end();
 

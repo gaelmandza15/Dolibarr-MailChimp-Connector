@@ -15,7 +15,9 @@
 
 // Load Dolibarr environment
 $res = 0;
-include_once DOL_DOCUMENT_ROOT.'/core/main.inc.php';
+if (!$res && file_exists(__DIR__.'/../../main.inc.php')) { $res = include __DIR__.'/../../main.inc.php'; }
+if (!$res && file_exists(__DIR__.'/..//../main.inc.php')) { $res = include __DIR__.'/..//../main.inc.php'; }
+if (!$res) { die('Include of main fails'); }
 
 global $db, $langs, $user, $conf;
 
@@ -28,7 +30,7 @@ $langs->loadLangs(array("mailchimp@mailchimp"));
 llxHeader('', $langs->trans("MailchimpCampaigns"), '', '', 0, 0, '', '', '', 'mod-mailchimp page-campaigns');
 
 print load_fiche_titre($langs->trans("MailchimpCampaigns"), '', 'email');
-print dol_get_alert($langs->trans("MailchimpSoonPhase4"), 'info');
+setEventMessages($langs->trans("MailchimpSoonPhase4"), null, 'mesgs'); dol_htmloutput_events();
 
 llxFooter();
 $db->close();

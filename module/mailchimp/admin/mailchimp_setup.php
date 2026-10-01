@@ -15,8 +15,9 @@
 
 // Load Dolibarr environment
 $res = 0;
-// Try main.inc.php into web root known detected into custum dir ('.../dolibarr/htdocs/custom')
-include_once DOL_DOCUMENT_ROOT.'/core/main.inc.php';
+if (!$res && file_exists(__DIR__.'/../../../main.inc.php')) { $res = include __DIR__.'/../../../main.inc.php'; }
+if (!$res && file_exists(__DIR__.'/../../main.inc.php')) { $res = include __DIR__.'/../../main.inc.php'; }
+if (!$res) { die('Include of main fails'); }
 
 global $db, $langs, $user, $conf;
 
@@ -145,10 +146,10 @@ $head = mailchimp_admin_prepare_head($tab);
 print dol_get_fiche_head($head, $tab, $langs->trans("MailchimpSetup"), -1, 'email');
 
 foreach ($errors as $e) {
-	print dol_get_alert($e, 'error');
+	setEventMessages($e, null, 'errors'); dol_htmloutput_events();
 }
 foreach ($messages as $m) {
-	print dol_get_alert($m, 'success');
+	setEventMessages($m, null, 'mesgs'); dol_htmloutput_events();
 }
 
 // ---------------------------------------------------------------- Onglet Connexion
@@ -185,7 +186,7 @@ if ($tab == 'connection') {
 // ---------------------------------------------------------------- Onglet Audiences
 if ($tab == 'audiences') {
 	if ($client === null) {
-		print dol_get_alert($langs->trans("MailchimpNoApiKey"), 'warning');
+		setEventMessages($langs->trans("MailchimpNoApiKey"), null, 'warnings'); dol_htmloutput_events();
 	} else {
 		print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?tab=audiences">';
 		print '<input type="hidden" name="token" value="'.newToken().'">';
