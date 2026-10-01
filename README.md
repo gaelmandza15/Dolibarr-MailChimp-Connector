@@ -13,13 +13,13 @@ gestion des campagnes, import/export bidirectionnel et suivi des performances.
 
 | Phase | Périmètre | État |
 |---|---|---|
-| 1 | Socle : descripteur, tables, client API, configuration admin | **Squelette livré** |
-| 2 | Synchronisation des contacts (MVP) | À faire |
-| 3 | Import/export bidirectionnel | À faire |
-| 4 | Gestion des campagnes | À faire |
-| 5 | Suivi des performances | À faire |
-| 6 | Webhook RGPD | À faire (récepteur journalisé) |
-| 7 | Qualité & packaging | À faire |
+| 1 | Socle : descripteur, tables, client API, configuration admin | ✅ | 
+| 2 | Synchronisation des contacts (MVP) | ✅ testée en réel | 
+| 3 | Import/export bidirectionnel | ✅ testé en réel | 
+| 4 | Gestion des campagnes | ✅ cycle complet testé | 
+| 5 | Suivi des performances | ✅ pipeline validé | 
+| 6 | Webhook RGPD | ✅ testé en réel | 
+| 7 | Qualité & packaging | ✅ zip distribuable | 
 
 ## Installation du module
 

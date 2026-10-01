@@ -70,7 +70,7 @@ if ($resql) {
 	}
 	$db->free($resql);
 }
-if (empty($secret) || $secret !== $valid_secret) {
+if (empty($secret) || $valid_secret === '' || !hash_equals($valid_secret, (string) $secret)) {
 	http_response_code(403);
 	exit('Forbidden');
 }
