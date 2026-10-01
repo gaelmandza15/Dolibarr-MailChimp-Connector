@@ -396,10 +396,9 @@ class modMailchimp extends DolibarrModules
 			return -1; // Do not activate module if error 'not allowed' returned when loading module SQL queries (the _load_table run sql with run_sql with the error allowed parameter set to 'default')
 		}
 
-		// Create extra directories
-		$ok = 1;
-		foreach ($this->dirs as $key => $dir) {
-			dol_mkdir($conf->mailchimp->dir_output.'/'.$dir);
+		// Create data directories
+		foreach ($this->dirs as $dir) {
+			dol_mkdir(DOL_DATA_ROOT.'/'.$dir);
 		}
 
 		return $this->_init($sql, $options);

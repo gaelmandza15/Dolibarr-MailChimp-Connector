@@ -77,7 +77,7 @@ class MailchimpContactSync
 
 	/**
 	 * Ajoute un événement dans la file d'attente (llx_mailchimp_sync_log).
-	 * Appelé par les triggers COMPANY_*/CONTACT_*.
+	 * Appelé par les triggers COMPANY_x / CONTACT_x.
 	 *
 	 * @param string $object_type company|contact
 	 * @param int    $fk_object
