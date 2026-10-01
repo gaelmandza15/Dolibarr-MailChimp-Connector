@@ -132,6 +132,28 @@ if ($action == 'savewebhook') {
 	$config = mailchimp_get_config($db);
 }
 
+if ($action == 'registerwebhook') {
+	if ($client === null) {
+		$errors[] = $langs->trans("MailchimpNoApiKey");
+	} elseif (empty($config['default_list_id'])) {
+		$errors[] = $langs->trans("MailchimpNoAudienceSelected");
+	} elseif (empty($config['webhook_secret']) || !$config['webhook_enabled']) {
+		$errors[] = $langs->trans("MailchimpWebhookNotConfigured");
+	} else {
+		$webhook_url = getDolGlobalString('MAIN_URL_ROOT', DOL_MAIN_URL_ROOT).'/custom/mailchimp/public/mailchimp/webhook.php?secret='.urlencode($config['webhook_secret']);
+		try {
+			$client->post('/lists/'.rawurlencode($config['default_list_id']).'/webhooks', array(
+				'url' => $webhook_url,
+				'events' => array('subscribe' => true, 'unsubscribe' => true, 'profile' => true, 'cleaned' => true, 'upemail' => false, 'campaign' => false),
+				'sources' => array('user' => true, 'admin' => true, 'api' => true),
+			));
+			$messages[] = $langs->trans("MailchimpWebhookRegistered", $webhook_url);
+		} catch (MailchimpApiException $e) {
+			$errors[] = '['.$e->status.'] '.$e->getMessage().' - '.$e->detail;
+		}
+	}
+}
+
 /*
  * View
  */
@@ -248,6 +270,14 @@ if ($tab == 'webhook') {
 	print '</table>';
 	print $form->buttonsSaveCancel("Save", '');
 	print '</form>';
+
+	// Enregistrement automatique du webhook chez Mailchimp
+	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'?tab=webhook">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
+	print '<input type="hidden" name="action" value="registerwebhook">';
+	print $form->buttonsSaveCancel("MailchimpWebhookRegister", '', array(), 0, '', 1);
+	print '</form>';
+	print '<br><span class="opacitymedium">'.$langs->trans("MailchimpWebhookRegisterHint").'</span>';
 }
 
 print dol_get_fiche_end();

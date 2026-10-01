@@ -637,6 +637,64 @@ class MailchimpContactSync
 	}
 
 	/**
+	 * Traite un événement webhook Mailchimp (unsubscribe, cleaned, profile, subscribe).
+	 * Appelé par public/mailchimp/webhook.php.
+	 *
+	 * @param string $type    Type d'evenement
+	 * @param array  $data    data[list_id], data[email], data[merges]...
+	 * @return string         'ok' | 'ignored'
+	 */
+	public function processWebhookEvent($type, $data)
+	{
+		$list_id = $data['list_id'] ?? '';
+		$email = strtolower(trim($data['email'] ?? ''));
+		if ($email === '') {
+			return 'ignored';
+		}
+
+		if ($type === 'unsubscribe' || $type === 'cleaned') {
+			$status = $type === 'cleaned' ? 'cleaned' : 'unsubscribed';
+			// Mapping local
+			$this->markLocalOptOut(array('email' => $email), $list_id, $status);
+			// Dolibarr : no_email sur les contacts + opt-out global emailing (tiers)
+			$this->db->query("UPDATE ".MAIN_DB_PREFIX."socpeople SET no_email = 1 WHERE email = '".$this->db->escape($email)."'");
+			$sql = "INSERT INTO ".MAIN_DB_PREFIX."mailing_unsubscribe (entity, email, date_creat)";
+			$sql .= " SELECT ".getEntity('mailing').", '".$this->db->escape($email)."', '".$this->db->idate(dol_now())."' FROM DUAL";
+			$sql .= " WHERE NOT EXISTS (SELECT 1 FROM ".MAIN_DB_PREFIX."mailing_unsubscribe WHERE email = '".$this->db->escape($email)."' AND entity = ".getEntity('mailing').")";
+			$this->db->query($sql);
+			return 'ok';
+		}
+
+		if ($type === 'profile') {
+			// Mise a jour des noms si fournis dans merges
+			$merges = $data['merges'] ?? array();
+			$firstname = trim($merges['FNAME'] ?? '');
+			$lastname = trim($merges['LNAME'] ?? '');
+			if ($firstname !== '' || $lastname !== '') {
+				$set = array();
+				if ($firstname !== '') {
+					$set[] = "firstname = '".$this->db->escape($firstname)."'";
+				}
+				if ($lastname !== '') {
+					$set[] = "lastname = '".$this->db->escape($lastname)."'";
+				}
+				$this->db->query("UPDATE ".MAIN_DB_PREFIX."socpeople SET ".implode(', ', $set)." WHERE email = '".$this->db->escape($email)."'");
+			}
+			return 'ok';
+		}
+
+		// subscribe : remettre l'eligibilite locale (le contact peut a nouveau recevoir des envois)
+		if ($type === 'subscribe') {
+			$sql = "UPDATE ".MAIN_DB_PREFIX."mailchimp_member_map SET opt_out = 0, mc_status = 'subscribed'";
+			$sql .= " WHERE email = '".$this->db->escape($email)."' AND list_id = '".$this->db->escape($list_id)."' AND entity = ".getEntity('mailchimp');
+			$this->db->query($sql);
+			return 'ok';
+		}
+
+		return 'ignored';
+	}
+
+	/**
 	 * Tâche cron : réconciliation des désabonnements (toutes les 24 h, fallback webhook).
 	 * Parcourt les membres unsubscribed/cleaned et met à jour no_email + mapping local.
 	 *
