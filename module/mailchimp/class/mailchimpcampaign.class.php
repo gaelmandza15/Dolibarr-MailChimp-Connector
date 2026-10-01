@@ -228,9 +228,77 @@ class MailchimpCampaign
 	}
 
 	/**
+	 * Liste les rapports de campagnes envoyées (GET /reports, paginé).
+	 *
+	 * @param int $count Nombre max par page
+	 * @return array|false Rapports, false si non configure
+	 */
+	public function listReports($count = 50)
+	{
+		if ($this->client === null) {
+			return false;
+		}
+		return $this->client->getPaginated('/reports', array(
+			'fields' => 'reports.id,reports.campaign_title,reports.send_time,reports.emails_sent,reports.opens,reports.clicks,reports.unsubscribed,reports.bounces',
+			'count' => $count,
+		));
+	}
+
+	/**
+	 * Assure l'existence d'une ligne campaign_map pour une campagne Mailchimp
+	 * (utile pour les campagnes créées hors du module).
+	 *
+	 * @param string $campaign_id
+	 * @param string $list_id
+	 * @param string $status
+	 * @param string $subject
+	 * @return int rowid du mapping
+	 */
+	public function ensureCampaignMap($campaign_id, $list_id = '', $status = 'sent', $subject = '')
+	{
+		$entity = getEntity('mailchimp');
+		$sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."mailchimp_campaign_map WHERE campaign_id = '".$this->db->escape($campaign_id)."' AND entity = ".$entity;
+		$res = $this->db->query($sql);
+		if ($res) {
+			$obj = $this->db->fetch_object($res);
+			$this->db->free($res);
+			if ($obj) {
+				return (int) $obj->rowid;
+			}
+		}
+		$sql = "INSERT INTO ".MAIN_DB_PREFIX."mailchimp_campaign_map (entity, fk_mailing, campaign_id, list_id, status, subject, date_creation)";
+		$sql .= " VALUES (".$entity.", 0, '".$this->db->escape($campaign_id)."', '".$this->db->escape($list_id)."', '".$this->db->escape($status)."', '".$this->db->escape($subject)."', '".$this->db->idate(dol_now())."')";
+		$res2 = $this->db->query($sql);
+		return $res2 ? (int) $this->db->last_insert_id($res2) : 0;
+	}
+
+	/**
+	 * Rappelle les statistiques de toutes les campagnes envoyées (GET /reports)
+	 * et les enregistre dans llx_mailchimp_campaign_stats.
+	 *
+	 * @return int Nombre de rapports synchronisés
+	 */
+	public function refreshStats()
+	{
+		$reports = $this->listReports(1000);
+		if ($reports === false) {
+			return 0;
+		}
+		$entity = getEntity('mailchimp');
+		$n = 0;
+		foreach ($reports as $r) {
+			if (empty($r['id'])) {
+				continue;
+			}
+			$rowid = $this->ensureCampaignMap($r['id'], '', 'sent', $r['campaign_title'] ?? '');
+			$this->saveStats($entity, $rowid, $r);
+			$n++;
+		}
+		return $n;
+	}
+
+	/**
 	 * Tâche cron : rappel des statistiques des campagnes envoyées (toutes les heures).
-	 * Phase 5 : pour chaque campagne sent de llx_mailchimp_campaign_map, GET /reports/{id}
-	 * et maj de llx_mailchimp_campaign_stats.
 	 *
 	 * @return int 0 si OK
 	 */
@@ -239,27 +307,7 @@ class MailchimpCampaign
 		if ($this->client === null) {
 			return 0;
 		}
-		$entity = getEntity('mailchimp');
-		$sql = "SELECT rowid, campaign_id FROM ".MAIN_DB_PREFIX."mailchimp_campaign_map";
-		$sql .= " WHERE entity = ".$entity." AND status IN ('sent', 'sending', 'schedule')";
-		$resql = $this->db->query($sql);
-		if (!$resql) {
-			return 1;
-		}
-		while ($obj = $this->db->fetch_object($resql)) {
-			try {
-				$report = $this->client->get('/reports/'.rawurlencode($obj->campaign_id), array(
-					'fields' => 'emails_sent,opens,clicks,unsubscribed,bounces',
-				));
-			} catch (MailchimpApiException $e) {
-				continue; // rapport pas encore disponible (campagne non envoyee)
-			}
-			$this->saveStats($entity, (int) $obj->rowid, $report);
-			if (($report['opens']['open_rate'] ?? -1) >= 0) {
-				// campagne terminee
-			}
-		}
-		$this->db->free($resql);
+		$this->refreshStats();
 		return 0;
 	}
 

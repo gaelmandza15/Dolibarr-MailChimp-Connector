@@ -5,6 +5,14 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
@@ -33,7 +41,7 @@ class mailchimpstats extends ModeleBoxes
 	public $depends = array('mailchimp');
 
 	/**
-	 * Charge les données et remplit $this->info_box_contents.
+	 * Charge les données depuis llx_mailchimp_campaign_map x llx_mailchimp_campaign_stats.
 	 *
 	 * @param int $max Nombre max d'entrées
 	 * @return void
@@ -56,12 +64,33 @@ class mailchimpstats extends ModeleBoxes
 			return;
 		}
 
-		// Phase 5 : jointure llx_mailchimp_campaign_map x llx_mailchimp_campaign_stats
-		// pour afficher les dernieres campagnes avec taux d'ouverture/clics.
-		$this->info_box_contents = array(array(0 => array(
-			'text' => $langs->trans("MailchimpSoon"),
-			'asis' => 1,
-		)));
+		$contents = array();
+		$sql = "SELECT cm.subject, cm.status, cs.emails_sent, cs.unique_opens, cs.open_rate, cs.unique_subscriber_clicks, cs.click_rate";
+		$sql .= " FROM ".MAIN_DB_PREFIX."mailchimp_campaign_map cm";
+		$sql .= " JOIN ".MAIN_DB_PREFIX."mailchimp_campaign_stats cs ON cs.fk_campaign_map = cm.rowid";
+		$sql .= " WHERE cm.entity = ".getEntity('mailchimp');
+		$sql .= " ORDER BY cs.last_sync DESC LIMIT ".((int) $max);
+		$resql = $db->query($sql);
+
+		if ($resql) {
+			while ($obj = $db->fetch_object($resql)) {
+				$contents[] = array(
+					0 => array('text' => dol_escape_htmltag($obj->subject !== '' ? $obj->subject : '(sans objet)'), 'asis' => 1),
+					1 => array('text' => (int) $obj->emails_sent.' env.'),
+					2 => array('text' => (int) $obj->unique_opens.' ouv. ('.round(100 * (float) $obj->open_rate, 1).' %)'),
+					3 => array('text' => (int) $obj->unique_subscriber_clicks.' clics ('.round(100 * (float) $obj->click_rate, 1).' %)'),
+				);
+			}
+			$db->free($resql);
+		}
+
+		if (empty($contents)) {
+			$contents[] = array(
+				0 => array('text' => '<span class="opacitymedium">'.$langs->trans("MailchimpNoReports").'</span>', 'asis' => 1),
+			);
+		}
+
+		$this->info_box_contents = $contents;
 	}
 
 	/**

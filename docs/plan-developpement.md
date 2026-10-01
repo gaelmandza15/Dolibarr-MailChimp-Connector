@@ -94,7 +94,7 @@ Dolibarr-MailChimp-Connector/
 | 2. Sync contacts | 2–3 j | **MVP** : contacts sync auto + manuelle | **Implémentée** (dry-run validé) |
 | 3. Import/export | 1–2 j | Flux bidirectionnel complet | **Implémentée** (import testé de bout en bout) |
 | 4. Campagnes | 2–3 j | Créer/envoyer/planifier depuis Dolibarr | **Implémentée** (cycle complet testé, envoi réel à la charge utilisateur) |
-| 5. Performances | 1–2 j | Dashboard + rapports | à faire |
+| 5. Performances | 1–2 j | Dashboard + rapports | **Implémentée** (pipeline validé; données réelles après 1er envoi) |
 | 6. Webhook RGPD | 1 j | Désabonnements synchronisés en retour | à faire |
 | 7. Qualité/packaging | 1–2 j | Zip distribuable | à faire |
 | **Total** | **8–14 j** | | |
