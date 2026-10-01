@@ -190,7 +190,8 @@ class MailchimpContactSync
 	 * Construit le payload Mailchimp d'un enregistrement.
 	 *
 	 * @param array $record Voir getEligibleRecords()
-	 * @return array Payload membre Mailchimp
+	 * @return array Payload membre Mailchimp (tags en chaines : format accepte
+	 *               par le batch subscribe ET l'endpoint membre unitaire)
 	 */
 	public function buildMemberPayload($record)
 	{
@@ -209,7 +210,6 @@ class MailchimpContactSync
 			$payload['merge_fields']['SOCIETE'] = $record['company'];
 		}
 		if (!empty($record['tags'])) {
-			// Batch subscribe (POST /lists/{id}) attend des tags en chaines simples
 			$payload['tags'] = array_values($record['tags']);
 		}
 		return $payload;
@@ -344,7 +344,7 @@ class MailchimpContactSync
 				$this->markLocalOptOut($rec, $list_id, $remote_status[$key]);
 				continue;
 			}
-			$payload = $this->buildMemberPayload($rec);
+			$payload = $this->buildMemberPayload($rec); // batch subscribe: tags en chaines
 			if (isset($remote_status[$key])) {
 				$payload['status'] = 'subscribed'; // membre existant actif : maj des champs
 				unset($payload['status_if_new']);
@@ -529,6 +529,7 @@ class MailchimpContactSync
 			}
 
 			$payload = $this->buildMemberPayload($rec);
+			$payload['status'] = 'subscribed'; // endpoint membre unitaire: 'status' obligatoire
 			try {
 				$this->client->post('/lists/'.rawurlencode($list_id).'/members', $payload);
 				$this->upsertLocalMapFromRecord($rec, $list_id);
