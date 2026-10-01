@@ -296,6 +296,22 @@ class modMailchimp extends DolibarrModules
 			'user' => 0,
 		);
 
+		// Left menu entry: import Mailchimp -> Dolibarr (Phase 3)
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=mailchimp',
+			'type' => 'left',
+			'titre' => 'MailchimpImport',
+			'mainmenu' => 'mailchimp',
+			'leftmenu' => 'mailchimp_import',
+			'url' => '/mailchimp/import_mailchimp.php',
+			'langs' => 'mailchimp@mailchimp',
+			'position' => 100 + $r,
+			'enabled' => '$conf->mailchimp->enabled',
+			'perms' => '$user->rights->mailchimp->sync',
+			'target' => '',
+			'user' => 0,
+		);
+
 		// Left menu entry: campagnes (page livree en Phase 4)
 		$this->menu[$r++] = array(
 			'fk_menu' => 'fk_mainmenu=mailchimp',
