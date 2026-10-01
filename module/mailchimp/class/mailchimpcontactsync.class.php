@@ -209,7 +209,8 @@ class MailchimpContactSync
 			$payload['merge_fields']['SOCIETE'] = $record['company'];
 		}
 		if (!empty($record['tags'])) {
-			$payload['tags'] = array_map(function ($t) { return array('name' => $t, 'status' => 'active'); }, $record['tags']);
+			// Batch subscribe (POST /lists/{id}) attend des tags en chaines simples
+			$payload['tags'] = array_values($record['tags']);
 		}
 		return $payload;
 	}
@@ -365,6 +366,12 @@ class MailchimpContactSync
 				$batches++;
 				$ok += (int) ($result['total_created'] ?? 0);
 				$updated += (int) ($result['total_updated'] ?? 0);
+				// Mapping local uniquement pour les membres effectivement crees/maj
+				foreach (array_merge($result['new_members'] ?? array(), $result['updated_members'] ?? array()) as $m) {
+					if (!empty($m['email_address'])) {
+						$this->upsertLocalMap(array('email_address' => $m['email_address']), $list_id);
+					}
+				}
 				if (!empty($result['errors'])) {
 					foreach ($result['errors'] as $err) {
 						$errors[] = ($err['email_address'] ?? '?').': '.($err['error'] ?? 'unknown');
@@ -372,16 +379,6 @@ class MailchimpContactSync
 				}
 			} catch (MailchimpApiException $e) {
 				$errors[] = 'batch: ['.$e->status.'] '.$e->getMessage().' - '.$e->detail;
-			}
-		}
-
-		// Mise à jour du mapping local
-		foreach ($ops_members as $payload) {
-			$this->upsertLocalMap($payload, $list_id);
-		}
-		foreach ($eligible as $rec) {
-			if (isset($remote_status[strtolower($rec['email'])]) && in_array($remote_status[strtolower($rec['email'])], array('unsubscribed', 'cleaned'))) {
-				continue; // déjà traité via markLocalOptOut
 			}
 		}
 

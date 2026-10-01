@@ -32,15 +32,20 @@ class MailchimpApiException extends Exception
 	/** @var string|null Message d'erreur detaille renvoye par Mailchimp */
 	public $detail = null;
 
+	/** @var array Corps complet de la reponse d'erreur (avec errors[] eventuel) */
+	public $response = array();
+
 	/**
-	 * @param int         $status  Statut HTTP
-	 * @param string      $message Message d'erreur
-	 * @param string|null $detail  Detail JSON renvoye par l'API
+	 * @param int         $status   Statut HTTP
+	 * @param string      $message  Message d'erreur
+	 * @param string|null $detail   Detail renvoye par l'API
+	 * @param array       $response Corps complet decode
 	 */
-	public function __construct($status, $message, $detail = null)
+	public function __construct($status, $message, $detail = null, $response = array())
 	{
 		$this->status = $status;
 		$this->detail = $detail;
+		$this->response = $response;
 		parent::__construct($message, $status);
 	}
 }
@@ -158,7 +163,7 @@ class MailchimpClient
 
 		$message = isset($decoded['title']) ? $decoded['title'] : 'HTTP error '.$status;
 		$detail = isset($decoded['detail']) ? $decoded['detail'] : $body;
-		throw new MailchimpApiException($status, $message, $detail);
+		throw new MailchimpApiException($status, $message, $detail, $decoded);
 	}
 
 	/** @param string $path @param array $params @return array */
