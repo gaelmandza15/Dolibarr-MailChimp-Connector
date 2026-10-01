@@ -1,0 +1,54 @@
+# Traduction du module Mailchimp (fr_FR)
+
+# Descripteur du module
+ModuleFamilyMarketing=Marketing
+MailchimpConnectorDesc=Synchronisation des contacts Dolibarr avec Mailchimp, gestion des campagnes et suivi des performances.
+MailchimpConnectorDescLong=Connecteur Mailchimp : synchronisation automatique des tiers et contacts vers les audiences Mailchimp, import/export bidirectionnel, creation et envoi de campagnes depuis Dolibarr, suivi des performances (ouvertures, clics, desabonnements).
+
+# Menus et pages
+MailchimpHome=Accueil Mailchimp
+MailchimpContactSync=Synchronisation des contacts
+MailchimpCampaigns=Campagnes
+MailchimpReports=Rapports de performance
+MailchimpSetup=Configuration Mailchimp
+MailchimpTab=Mailchimp
+MailchimpTabConnection=Connexion
+MailchimpTabAudiences=Audiences
+MailchimpTabMergeFields=Champs de fusion
+MailchimpTabWebhook=Webhook
+
+# Configuration
+Parameter=Parametre
+Value=Valeur
+MailchimpApiKey=Cle API Mailchimp
+MailchimpApiKeyHint=Cle au format xxxxxxxx-dc. Le suffixe correspond a votre datacenter (%s detecte automatiquement).
+MailchimpDatacenter=Datacenter
+MailchimpTestConnection=Tester la connexion
+MailchimpTestOk=Connexion reussie (health_status : %s)
+MailchimpTestKo=Echec de connexion a l'API Mailchimp
+MailchimpCreateKeyHint=Creez la cle API dans Mailchimp : Extras (account) > API keys, avec un compte administrateur. Voir %s
+MailchimpNoApiKey=Aucune cle API Mailchimp configuree. Renseignez-la dans l'onglet Connexion.
+MailchimpErrorInvalidKey=Cle API invalide
+MailchimpErrorEncrypt=Echec du chiffrement de la cle API
+MailchimpSetupSaved=Configuration enregistree%s
+MailchimpFetchAudiences=Charger les audiences
+MailchimpAudience=Audience Mailchimp par defaut
+Members=Membres
+MailchimpMergeField=Champ de fusion Mailchimp
+MailchimpDolibarrSource=Source Dolibarr
+MailchimpSender=Expediteur par defaut des campagnes
+MailchimpFromName=Nom d'expediteur
+MailchimpReplyTo=Email de reponse
+MailchimpWebhookEnabled=Webhook active
+MailchimpWebhookUrl=URL du webhook (a declarer dans Mailchimp > Audience > Settings > Webhooks)
+MailchimpWebhookHint=Evenements geres : unsubscribe, profile, cleaned. L'URL doit etre accessible publiquement en HTTPS.
+
+# Divers
+Feature=Fonction
+Status=Statut
+MailchimpSoon=Bientot disponible
+MailchimpSoonPhase2=Fonctionnalite livree en Phase 2 du plan de developpement.
+MailchimpSoonPhase4=Fonctionnalite livree en Phase 4 du plan de developpement.
+MailchimpSoonPhase5=Fonctionnalite livree en Phase 5 du plan de developpement.
+MailchimpAvailablePhase=Prevue en phase %s
+MailchimpCampaignStats=Statistiques des campagnes Mailchimp

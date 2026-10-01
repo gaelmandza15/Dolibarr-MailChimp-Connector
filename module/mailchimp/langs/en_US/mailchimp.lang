@@ -1,0 +1,54 @@
+# Mailchimp module translation (en_US)
+
+# Module descriptor
+ModuleFamilyMarketing=Marketing
+MailchimpConnectorDesc=Synchronize Dolibarr contacts with Mailchimp, manage campaigns and track performance.
+MailchimpConnectorDescLong=Mailchimp connector: automatic synchronization of third parties and contacts to Mailchimp audiences, two-way import/export, campaign creation and sending from Dolibarr, performance tracking (opens, clicks, unsubscribes).
+
+# Menus and pages
+MailchimpHome=Mailchimp home
+MailchimpContactSync=Contact synchronization
+MailchimpCampaigns=Campaigns
+MailchimpReports=Performance reports
+MailchimpSetup=Mailchimp setup
+MailchimpTab=Mailchimp
+MailchimpTabConnection=Connection
+MailchimpTabAudiences=Audiences
+MailchimpTabMergeFields=Merge fields
+MailchimpTabWebhook=Webhook
+
+# Setup
+Parameter=Parameter
+Value=Value
+MailchimpApiKey=Mailchimp API key
+MailchimpApiKeyHint=Key in the format xxxxxxxx-dc. The suffix is your datacenter (%s detected automatically).
+MailchimpDatacenter=Datacenter
+MailchimpTestConnection=Test connection
+MailchimpTestOk=Connection successful (health_status: %s)
+MailchimpTestKo=Failed to connect to the Mailchimp API
+MailchimpCreateKeyHint=Create the API key in Mailchimp: Extras (account) > API keys, with an administrator account. See %s
+MailchimpNoApiKey=No Mailchimp API key configured. Set it in the Connection tab.
+MailchimpErrorInvalidKey=Invalid API key
+MailchimpErrorEncrypt=Failed to encrypt the API key
+MailchimpSetupSaved=Setup saved%s
+MailchimpFetchAudiences=Load audiences
+MailchimpAudience=Default Mailchimp audience
+Members=Members
+MailchimpMergeField=Mailchimp merge field
+MailchimpDolibarrSource=Dolibarr source
+MailchimpSender=Default campaign sender
+MailchimpFromName=From name
+MailchimpReplyTo=Reply-to email
+MailchimpWebhookEnabled=Webhook enabled
+MailchimpWebhookUrl=Webhook URL (to declare in Mailchimp > Audience > Settings > Webhooks)
+MailchimpWebhookHint=Handled events: unsubscribe, profile, cleaned. The URL must be publicly reachable over HTTPS.
+
+# Misc
+Feature=Feature
+Status=Status
+MailchimpSoon=Coming soon
+MailchimpSoonPhase2=Feature delivered in Phase 2 of the development plan.
+MailchimpSoonPhase4=Feature delivered in Phase 4 of the development plan.
+MailchimpSoonPhase5=Feature delivered in Phase 5 of the development plan.
+MailchimpAvailablePhase=Planned in phase %s
+MailchimpCampaignStats=Mailchimp campaign statistics
