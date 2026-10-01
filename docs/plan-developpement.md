@@ -91,7 +91,7 @@ Dolibarr-MailChimp-Connector/
 |---|---|---|---|
 | 0. Environnement | 0,5–1 j | Dolibarr 24 opérationnel sous XAMPP | à faire (côté machine) |
 | 1. Socle | 2–3 j | Module activable, config API fonctionnelle | squelette livré |
-| 2. Sync contacts | 2–3 j | **MVP** : contacts sync auto + manuelle | à faire |
+| 2. Sync contacts | 2–3 j | **MVP** : contacts sync auto + manuelle | **Implémentée** (dry-run validé) |
 | 3. Import/export | 1–2 j | Flux bidirectionnel complet | à faire |
 | 4. Campagnes | 2–3 j | Créer/envoyer/planifier depuis Dolibarr | à faire |
 | 5. Performances | 1–2 j | Dashboard + rapports | à faire |
