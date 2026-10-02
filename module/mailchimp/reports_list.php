@@ -117,7 +117,7 @@ $kpis = array(
 
 print '<div class="fichecenter">';
 foreach ($kpis as $kpi) {
-	print '<div style="display:inline-block; width:16%; min-width:130px; margin:5px; text-align:center;" class="ficheaddleft">';
+	print '<div style="display:inline-block; width:16%; min-width:150px; margin:5px; text-align:center;" class="ficheaddleft">';
 	print '<div class="info-box">';
 	print '<span class="info-box-icon"><i class="fa '.$kpi[2].'"></i></span>';
 	print '<div class="info-box-content"><span class="info-box-number">'.$kpi[1].'</span>';
