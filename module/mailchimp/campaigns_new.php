@@ -75,7 +75,7 @@ if ($action == 'create') {
 				throw new MailchimpApiException(0, 'Client non configure');
 			}
 			$campaign->setContent($campaign_id, $content_html, strip_tags($content_html));
-			header('Location: '.dol_buildpath('/mailchimp/campaigns_list.php', 1).'&save_lastsearch_values=1');
+			header('Location: '.dol_buildpath('/mailchimp/campaigns_list.php', 1).'?save_lastsearch_values=1');
 			exit;
 		} catch (MailchimpApiException $e) {
 			$errors[] = '['.$e->status.'] '.$e->getMessage().' - '.$e->detail;

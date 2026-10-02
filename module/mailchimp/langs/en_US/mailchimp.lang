@@ -119,3 +119,4 @@ MailchimpWebhookRegister=Register webhook with Mailchimp
 MailchimpWebhookRegisterHint=Registers the URL above on the default audience (events: subscribe, unsubscribe, profile, cleaned). Requires a publicly reachable HTTPS URL.
 MailchimpWebhookRegistered=Webhook registered with Mailchimp: %s
 MailchimpWebhookNotConfigured=Enable the webhook and save first to generate the secret.
+MailchimpAvailable=Available

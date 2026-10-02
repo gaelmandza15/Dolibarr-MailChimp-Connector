@@ -119,3 +119,4 @@ MailchimpWebhookRegister=Enregistrer le webhook chez Mailchimp
 MailchimpWebhookRegisterHint=Declenche l'inscription automatique de l'URL ci-dessus sur l'audience par defaut (evenements subscribe, unsubscribe, profile, cleaned). Necessite une URL publiquement accessible en HTTPS.
 MailchimpWebhookRegistered=Webhook enregistre chez Mailchimp : %s
 MailchimpWebhookNotConfigured=Activez d'abord le webhook et sauvegardez pour generer le secret.
+MailchimpAvailable=Disponible

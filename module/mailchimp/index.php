@@ -43,16 +43,16 @@ print '<table class="noborder centpercent">';
 print '<tr class="liste_titre"><td>'.$langs->trans("Feature").'</td><td>'.$langs->trans("Status").'</td></tr>';
 
 $features = array(
-	'/mailchimp/contactsync.php' => array("MailchimpContactSync", '$user->rights->mailchimp->sync', '2.0'),
-	'/mailchimp/campaigns_list.php' => array("MailchimpCampaigns", '$user->rights->mailchimp->campaigns', '4.0'),
-	'/mailchimp/reports_list.php' => array("MailchimpReports", '$user->rights->mailchimp->read', '5.0'),
-	'/mailchimp/admin/mailchimp_setup.php' => array("MailchimpSetup", '$user->admin', '1.0'),
+	'/mailchimp/contactsync.php' => array("MailchimpContactSync", '$user->rights->mailchimp->sync'),
+	'/mailchimp/import_mailchimp.php' => array("MailchimpImport", '$user->rights->mailchimp->sync'),
+	'/mailchimp/campaigns_list.php' => array("MailchimpCampaigns", '$user->rights->mailchimp->campaigns'),
+	'/mailchimp/reports_list.php' => array("MailchimpReports", '$user->rights->mailchimp->read'),
+	'/mailchimp/admin/mailchimp_setup.php' => array("MailchimpSetup", '$user->admin'),
 );
 
 foreach ($features as $url => $info) {
 	print '<tr><td><a href="'.dol_buildpath($url, 1).'">'.$langs->trans($info[0]).'</a></td>';
-	$available = version_compare($info[2], '2.0', '<') ? ' ('.$langs->trans("MailchimpSoon").')' : '';
-	print '<td><span class="opacitymedium">'.$langs->trans("MailchimpAvailablePhase", $info[2]).$available.'</span></td></tr>';
+	print '<td><span class="badge badge-status4">'.$langs->trans("MailchimpAvailable").'</span></td></tr>';
 }
 
 print '</table></div></div>';
