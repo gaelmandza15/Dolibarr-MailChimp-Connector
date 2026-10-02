@@ -73,6 +73,20 @@ Activer depuis Configuration → Modules :
 - **API REST** (tests externes),
 - **Module Builder** (référence du squelette officiel).
 
+### 6b. Lancer le serveur PHP intégré sans warning (optionnel)
+
+Le serveur intégré `php -S` ne définit pas `\`, ce qui provoque un warning
+affiché dans le bandeau par le cœur Dolibarr (main.inc.php). Un routeur est fourni dans le dépôt :
+
+```
+cd C:
+mpphtdocsdolibarrhtdocs
+C:
+mppphpphp.exe -S 127.0.0.1:8090 router.php
+```
+
+(voir `docs/router-serveur-php-integre.php` — sous Apache/XAMPP classique, ce contournement est inutile.)
+
 ## 7. Vérifier la syntaxe PHP du module
 
 ```
