@@ -75,14 +75,12 @@ Activer depuis Configuration → Modules :
 
 ### 6b. Lancer le serveur PHP intégré sans warning (optionnel)
 
-Le serveur intégré `php -S` ne définit pas `\`, ce qui provoque un warning
+Le serveur intégré `php -S` ne définit pas `$_SERVER["QUERY_STRING"]`, ce qui provoque un warning
 affiché dans le bandeau par le cœur Dolibarr (main.inc.php). Un routeur est fourni dans le dépôt :
 
 ```
-cd C:
-mpphtdocsdolibarrhtdocs
-C:
-mppphpphp.exe -S 127.0.0.1:8090 router.php
+cd C:\xampp\htdocs\dolibarr\htdocs
+C:\xampp\php\php.exe -S 127.0.0.1:8090 router.php
 ```
 
 (voir `docs/router-serveur-php-integre.php` — sous Apache/XAMPP classique, ce contournement est inutile.)
